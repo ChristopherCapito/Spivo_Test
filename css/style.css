@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  -webkit-box-sizing: border-box;
+}
+
+.wrapper {
+  width: 80%;
+  height: 80%;
+  margin: auto;
+}
+
+.frame {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100vh;
+  height: 100vh;
+  border-style: solid;
+  border-color: lightslategray;
+  border-width: 1px;
+  border-radius: 50%;
+  box-shadow: 1px 1px 10px 1px lightgray;
+  margin: auto;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
