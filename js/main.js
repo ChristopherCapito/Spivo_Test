@@ -145,12 +145,12 @@ function init() {
                 if (child instanceof THREE.Mesh) {
 
                     //Cast & receive for selfshadowing
-                    child.castShadow = true;
-                    child.receiveShadow = true;
+                    //child.castShadow = true;
+                    //child.receiveShadow = true;
                 }
             });
-            object.castShadow = true;
-            object.receiveShadow = true;
+            //object.castShadow = true;
+            //object.receiveShadow = true;
             scene.add(object);
         });
         //#endregion
@@ -171,8 +171,8 @@ function init() {
     //var winResize = new THREEx.WindowResize(renderer,camera);
     //winResize.trigger();
 
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.typeype = THREE.BasicShadowMap;
+    renderer.shadowMap.enabled = false;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
    
 
     //Not the optimal solution but eh
