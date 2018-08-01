@@ -7,7 +7,6 @@ camera = new THREE.PerspectiveCamera(30, 1, 1, 100000);
 camera.position.x = 0;
 camera.position.y = 0;
 camera.position.z = 50;
-camera.useQuaternion = true;
 
 camera.lookAt({
     x: 0,
@@ -83,18 +82,17 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
-    //light.castShadow = true;
+    light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
-    var d = 20;
+    var d = 10;
 
     light.shadow.camera.left = -d;
     light.shadow.camera.right = d;
     light.shadow.camera.top = d;
     light.shadow.camera.bottom = -d;
     light.shadow.camera.far = 1000;
-    light.shadowDarkness = 10;
 
     //Add Directional light to scene
     camera.add(light);
@@ -185,7 +183,8 @@ function init() {
         alpha: true,
         antialias: true
     });
-
+    
+    renderer.setPixelRatio(3); 
 
 
 
@@ -220,14 +219,14 @@ function resizeCanvasToDisplaySize(force) {
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
-    tcontrols.update();      
+    tcontrols.update();
+    resizeCanvasToDisplaySize();      
     render();
 }
 
 function render() {
-    resizeCanvasToDisplaySize();
-    tcontrols.handleResize();  
-    renderer.setPixelRatio(3); 
+    
+    tcontrols.handleResize();      
     camera.lookAt(scene.position);
     renderer.render(scene, camera);
 }
