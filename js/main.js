@@ -111,7 +111,7 @@ function init() {
     var filllight;
     filllight = new THREE.DirectionalLight(filllightcolor, 0.5);
     filllight.position.set(-450, -450, 0);
-    filllight.castShadow=true;
+    //filllight.castShadow=true;
     camera.add(filllight);
     //#endregion
 
