@@ -83,10 +83,10 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
+    //light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
-    var d = 10;
     var d = 20;
 
     light.shadow.camera.left = -d;
@@ -194,7 +194,6 @@ function init() {
     //winResize.trigger();
 
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.typeype = THREE.PCFSoftShadowMap;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
    
 
