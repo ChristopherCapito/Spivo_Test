@@ -35,7 +35,7 @@ var tcontrols = new THREE.TrackballControls(camera, container);
 tcontrols.noPan=true;
 tcontrols.noZoom=true;
 tcontrols.dynamicDampingFactor=0.05;
-tcontrols.rotateSpeed=1;
+tcontrols.rotateSpeed=2;
 tcontrols.enableKeys = false;
 
 
