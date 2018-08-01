@@ -83,7 +83,7 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
-    light.castShadow = true;
+    //light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
@@ -103,7 +103,7 @@ function init() {
     var backlight;    
     backlight = new THREE.DirectionalLight(backlightcolor, 0.5);
     backlight.position.set(-200, 400, 0);
-    backlight.castShadow=true;
+    //backlight.castShadow=true;
     camera.add(backlight);
     
 
@@ -111,7 +111,7 @@ function init() {
     var filllight;
     filllight = new THREE.DirectionalLight(filllightcolor, 0.5);
     filllight.position.set(-450, -450, 0);
-    filllight.castShadow=true;
+    //filllight.castShadow=true;
     camera.add(filllight);
     //#endregion
 
