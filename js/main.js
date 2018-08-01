@@ -171,8 +171,8 @@ function init() {
     //var winResize = new THREEx.WindowResize(renderer,camera);
     //winResize.trigger();
 
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.typeype = THREE.BasicShadowMap;
+    renderer.shadowMap.enabled = false;
+    renderer.shadowMap.typeype = THREE.PCFSoftShadowMap;
    
 
     //Not the optimal solution but eh
