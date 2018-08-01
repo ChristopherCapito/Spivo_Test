@@ -83,11 +83,11 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
-    light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
     var d = 10;
+    var d = 20;
 
     light.shadow.camera.left = -d;
     light.shadow.camera.right = d;
@@ -103,7 +103,17 @@ function init() {
     var backlight;    
     backlight = new THREE.DirectionalLight(backlightcolor, 0.5);
     backlight.position.set(-200, 400, 0);
+    
+    /*
     backlight.castShadow=true;
+    backlight.shadow.camera.left = -d;
+    backlight.shadow.camera.right = d;
+    backlight.shadow.camera.top = d;
+    backlight.shadow.camera.bottom = -d;
+    backlight.shadow.camera.far = 1000;
+    backlight.shadowDarkness = 10;
+    */
+
     camera.add(backlight);
     
 
@@ -111,7 +121,19 @@ function init() {
     var filllight;
     filllight = new THREE.DirectionalLight(filllightcolor, 0.5);
     filllight.position.set(-450, -450, 0);
+
+    /*
     filllight.castShadow=true;
+    filllight.position.set(-200, 400, 0);
+    filllight.castShadow=true;
+    filllight.shadow.camera.left = -d;
+    filllight.shadow.camera.right = d;
+    filllight.shadow.camera.top = d;
+    filllight.shadow.camera.bottom = -d;
+    filllight.shadow.camera.far = 1000;
+    filllight.shadowDarkness = 1;
+    */
+
     camera.add(filllight);
     //#endregion
 
@@ -173,6 +195,7 @@ function init() {
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.typeype = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
    
 
     //Not the optimal solution but eh
