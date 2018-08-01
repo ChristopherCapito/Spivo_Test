@@ -103,7 +103,7 @@ function init() {
     var backlight;    
     backlight = new THREE.DirectionalLight(backlightcolor, 0.5);
     backlight.position.set(-200, 400, 0);
-    backlight.castShadow=true;
+    //backlight.castShadow=true;
     camera.add(backlight);
     
 
