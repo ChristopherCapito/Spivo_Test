@@ -221,11 +221,7 @@ function animate() {
     controls.update();
     tcontrols.update();
     resizeCanvasToDisplaySize();      
-    render();
-}
-
-function render() {
-    
+      
     tcontrols.handleResize();      
     camera.lookAt(scene.position);
     renderer.render(scene, camera);

@@ -1,0 +1,22 @@
+{
+  "name": "spivo_test",
+  "version": "1.0.0",
+  "description": "Spivo_Test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ziegel999/Spivo_Test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ziegel999/Spivo_Test/issues"
+  },
+  "homepage": "https://github.com/ziegel999/Spivo_Test#readme",
+  "dependencies": {
+    "@types/three": "^0.92.14"
+  }
+}
