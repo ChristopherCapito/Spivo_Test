@@ -149,8 +149,8 @@ function init() {
                     //child.receiveShadow = true;
                 }
             });
-            //object.castShadow = true;
-            //object.receiveShadow = true;
+            object.castShadow = true;
+            object.receiveShadow = true;
             scene.add(object);
         });
         //#endregion
