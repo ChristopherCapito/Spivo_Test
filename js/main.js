@@ -87,7 +87,7 @@ function init() {
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
-    var d = 10;
+    var d = 100;
 
     light.shadow.camera.left = -d;
     light.shadow.camera.right = d;
@@ -105,6 +105,8 @@ function init() {
     backlight.position.set(-200, 400, 0);
     backlight.castShadow=true;
 
+  
+
     backlight.shadow.camera.left = -d;
     backlight.shadow.camera.right = d;
     backlight.shadow.camera.top = d;
@@ -121,6 +123,8 @@ function init() {
     filllight.position.set(-450, -450, 0);
     filllight.castShadow=true;
 
+   
+
     filllight.position.set(-200, 400, 0);
     filllight.castShadow=true;
     filllight.shadow.camera.left = -d;
@@ -128,7 +132,7 @@ function init() {
     filllight.shadow.camera.top = d;
     filllight.shadow.camera.bottom = -d;
     filllight.shadow.camera.far = 1000;
-    filllight.shadowDarkness = 10;
+    filllight.shadowDarkness = 1;
 
     camera.add(filllight);
     //#endregion
