@@ -83,7 +83,7 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
-    //light.castShadow = true;
+    light.castShadow = true;
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
