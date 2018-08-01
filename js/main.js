@@ -103,7 +103,15 @@ function init() {
     var backlight;    
     backlight = new THREE.DirectionalLight(backlightcolor, 0.5);
     backlight.position.set(-200, 400, 0);
-    //backlight.castShadow=true;
+    backlight.castShadow=true;
+
+    backlight.shadow.camera.left = -d;
+    backlight.shadow.camera.right = d;
+    backlight.shadow.camera.top = d;
+    backlight.shadow.camera.bottom = -d;
+    backlight.shadow.camera.far = 1000;
+    backlight.shadowDarkness = 10;
+
     camera.add(backlight);
     
 
@@ -111,7 +119,17 @@ function init() {
     var filllight;
     filllight = new THREE.DirectionalLight(filllightcolor, 0.5);
     filllight.position.set(-450, -450, 0);
-    //filllight.castShadow=true;
+    filllight.castShadow=true;
+
+    filllight.position.set(-200, 400, 0);
+    filllight.castShadow=true;
+    filllight.shadow.camera.left = -d;
+    filllight.shadow.camera.right = d;
+    filllight.shadow.camera.top = d;
+    filllight.shadow.camera.bottom = -d;
+    filllight.shadow.camera.far = 1000;
+    filllight.shadowDarkness = 10;
+
     camera.add(filllight);
     //#endregion
 

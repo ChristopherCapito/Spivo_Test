@@ -22,23 +22,6 @@ body {
   margin: auto;
 }
 
-#blue{
-font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-font-size: 1em;
-background-color: coral;
-height:100vh;
-}
-
-
-.column{
-  float:left;
-  width:50%;
-}
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
 
 canvas {
   display: block;
