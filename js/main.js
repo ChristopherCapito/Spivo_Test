@@ -145,8 +145,8 @@ function init() {
                 if (child instanceof THREE.Mesh) {
 
                     //Cast & receive for selfshadowing
-                    //child.castShadow = true;
-                    //child.receiveShadow = true;
+                    child.castShadow = true;
+                    child.receiveShadow = true;
                 }
             });
             object.castShadow = true;
