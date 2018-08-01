@@ -172,7 +172,7 @@ function init() {
     //winResize.trigger();
 
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.typeype = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.typeype = THREE.BasicShadowMap;
    
 
     //Not the optimal solution but eh
