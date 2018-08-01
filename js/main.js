@@ -73,11 +73,11 @@ function init() {
     /*All lights are set here. This includes all shadow properties */
 
     //Add ambient light
-    scene.add(new THREE.AmbientLight(ambientLightColor, 0.8));
+    scene.add(new THREE.AmbientLight(ambientLightColor, 1));
 
     //Set up Directional Light
     var light;
-    light = new THREE.DirectionalLight(directionalLightColor, 1);
+    light = new THREE.DirectionalLight(directionalLightColor, 0.5);
     light.position.set(300, -200, 0);
     light.position.multiplyScalar(1.3);
 
@@ -99,7 +99,7 @@ function init() {
 
     //Add a backlight
     var backlight;    
-    backlight = new THREE.DirectionalLight(backlightcolor, 0.5);
+    backlight = new THREE.DirectionalLight(backlightcolor, 0.4);
     backlight.position.set(-200, 400, 0);
     
     /*
@@ -117,7 +117,7 @@ function init() {
 
     //Add a filllight
     var filllight;
-    filllight = new THREE.DirectionalLight(filllightcolor, 0.5);
+    filllight = new THREE.DirectionalLight(filllightcolor, 0.4);
     filllight.position.set(-450, -450, 0);
 
     /*
