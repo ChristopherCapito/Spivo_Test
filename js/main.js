@@ -2,6 +2,14 @@ var camera, scene;
 var renderer;
 var container;
 
+var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+// Light Color Config
+var directionalLightColor = 0xEAF2FF;
+var backlightcolor = 0x007CBA;
+var filllightcolor = 0xAF1A73;
+var ambientLightColor = 0xC9E2FE;
+
 //Camera Setup
 camera = new THREE.PerspectiveCamera(30, 1, 1, 100000);
 camera.position.x = 0;
@@ -15,7 +23,8 @@ camera.lookAt({
 });
 
 
-
+//#region Deprecated Controls
+/*
 //Camera Controls
 var controls = new THREE.OrbitControls(camera, container);
 controls.enableZoom = false;
@@ -27,25 +36,16 @@ controls.dampingFactor = 0.1;
 controls.rotateSpeed = 0.05;
 controls.autoRotateSpeed = 0.5;
 controls.autoRotate = true;
-
+*/
+//#endregion
 
 //Trackballcontrols
 var tcontrols = new THREE.TrackballControls(camera, container);
-tcontrols.noPan=true;
-tcontrols.noZoom=true;
-tcontrols.dynamicDampingFactor=0.05;
-tcontrols.rotateSpeed=2;
+tcontrols.noPan = true;
+tcontrols.noZoom = true;
+tcontrols.dynamicDampingFactor = 0.005;
+tcontrols.rotateSpeed = 1.2;
 tcontrols.enableKeys = false;
-
-
-
-
-
-// Light Color Config
-var directionalLightColor = 0xEAF2FF;
-var backlightcolor = 0x007CBA;
-var filllightcolor = 0xAF1A73;
-var ambientLightColor = 0xC9E2FE;
 
 init();
 animate();
@@ -61,15 +61,13 @@ renderer.context.canvas.addEventListener("webglcontextrestored", function (event
     animate();
 }, false);
 
+
 function init() {
 
     //Initialize Scene
     scene = new THREE.Scene();
     scene.add(camera);
-    
 
-
-    //#region Lighting
     /*All lights are set here. This includes all shadow properties */
 
     //Add ambient light
@@ -82,7 +80,7 @@ function init() {
     light.position.multiplyScalar(1.3);
 
     //Set up Directional Light Shadow Properties
-    light.castShadow = true;
+    
     light.shadow.mapSize.width = 1024;
     light.shadow.mapSize.height = 1024;
 
@@ -97,30 +95,39 @@ function init() {
     //Add Directional light to scene
     camera.add(light);
 
+
     //Add a backlight
-    var backlight;    
-    backlight = new THREE.DirectionalLight(backlightcolor, 0.4);
+    var backlight;
+    backlight = new THREE.DirectionalLight(directionalLightColor, 0.4);
     backlight.position.set(-200, 400, 0);
+
     
-    /*
-    backlight.castShadow=true;
     backlight.shadow.camera.left = -d;
     backlight.shadow.camera.right = d;
     backlight.shadow.camera.top = d;
     backlight.shadow.camera.bottom = -d;
     backlight.shadow.camera.far = 1000;
     backlight.shadowDarkness = 10;
-    */
-
     camera.add(backlight);
-    
 
+    //Because iOS sucks we need to disable shadows for now
+    if(iOS){
+        light.castShadow = false; 
+        backlight.castShadow = false;
+    } else {
+        light.castShadow = true; 
+        backlight.castShadow = true;
+    }
+
+
+    //#region Deprecated Lighting
+    /*
     //Add a filllight
     var filllight;
     filllight = new THREE.DirectionalLight(filllightcolor, 0.4);
     filllight.position.set(-450, -450, 0);
 
-    /*
+    
     filllight.castShadow=true;
     filllight.position.set(-200, 400, 0);
     filllight.castShadow=true;
@@ -130,10 +137,9 @@ function init() {
     filllight.shadow.camera.bottom = -d;
     filllight.shadow.camera.far = 1000;
     filllight.shadowDarkness = 1;
+       camera.add(filllight);
     */
-
-    camera.add(filllight);
-    //#endregion
+    //#endregion  
 
     //#region Object Loading
 
@@ -169,8 +175,15 @@ function init() {
                     child.receiveShadow = true;
                 }
             });
-            object.castShadow = true;
+
+            if(iOS){
+                object.castShadow = false;
+                object.receiveShadow = false;
+            } else {
+                object.castShadow = true;
             object.receiveShadow = true;
+            }
+            
             scene.add(object);
         });
         //#endregion
@@ -183,18 +196,16 @@ function init() {
         alpha: true,
         antialias: true
     });
-    
-    renderer.setPixelRatio(3); 
 
-
+    renderer.setPixelRatio(3);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     //Resizer Tool only kinda works, does not limit to the div
     //var winResize = new THREEx.WindowResize(renderer,camera);
     //winResize.trigger();
 
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-   
+
 
     //Not the optimal solution but eh
     resizeCanvasToDisplaySize(true);
@@ -209,20 +220,22 @@ function resizeCanvasToDisplaySize(force) {
         // you must pass false here or three.js sadly fights the browser
         renderer.setSize(width, height, false);
         camera.aspect = width / height;
-        
+
         camera.updateProjectionMatrix();
         // set render target sizes here
-       
+
     }
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    //Deprecated
+    //controls.update();
+  
     tcontrols.update();
-    resizeCanvasToDisplaySize();      
-      
-    tcontrols.handleResize();      
+    resizeCanvasToDisplaySize();
+
+    tcontrols.handleResize();
     camera.lookAt(scene.position);
     renderer.render(scene, camera);
 }
