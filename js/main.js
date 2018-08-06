@@ -2,6 +2,14 @@ var camera, scene;
 var renderer;
 var container;
 
+var fixed = document.getElementById('webGL_canvas');
+
+fixed.addEventListener('touchmove', function(e) {
+
+        e.preventDefault();
+
+}, false);
+
 var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 // Light Color Config
