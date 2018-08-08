@@ -14,9 +14,7 @@ var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 // Light Color Config
 var directionalLightColor = 0xEAF2FF;
-var backlightcolor = 0x007CBA;
-var filllightcolor = 0xAF1A73;
-var ambientLightColor = 0xC9E2FE;
+var ambientLightColor = 0xE6F1FE;
 
 //Camera Setup
 camera = new THREE.PerspectiveCamera(30, 1, 1, 100000);
@@ -51,7 +49,7 @@ controls.autoRotate = true;
 var tcontrols = new THREE.TrackballControls(camera, container);
 tcontrols.noPan = true;
 tcontrols.noZoom = true;
-tcontrols.dynamicDampingFactor = 0.005;
+tcontrols.dynamicDampingFactor = 0.05;
 tcontrols.rotateSpeed = 1.2;
 tcontrols.enableKeys = false;
 
@@ -106,9 +104,8 @@ function init() {
 
     //Add a backlight
     var backlight;
-    backlight = new THREE.DirectionalLight(directionalLightColor, 0.4);
+    backlight = new THREE.DirectionalLight(directionalLightColor, 0.1);
     backlight.position.set(-200, 400, 0);
-
     
     backlight.shadow.camera.left = -d;
     backlight.shadow.camera.right = d;
@@ -118,6 +115,22 @@ function init() {
     backlight.shadowDarkness = 10;
     camera.add(backlight);
 
+
+    var backlight2;
+    backlight2 = new THREE.PointLight(ambientLightColor, 0.3);
+    backlight2.position.set(0, -60, 30);
+    
+    backlight2.shadow.camera.left = -d;
+    backlight2.shadow.camera.right = d;
+    backlight2.shadow.camera.top = d;
+    backlight2.shadow.camera.bottom = -d;
+    backlight2.shadow.camera.far = 1000;
+    backlight2.shadowDarkness = 10;
+    
+    camera.add(backlight2);
+
+
+
     //Because iOS sucks we need to disable shadows for now
     if(iOS){
         light.castShadow = false; 
@@ -126,28 +139,6 @@ function init() {
         light.castShadow = true; 
         backlight.castShadow = true;
     }
-
-
-    //#region Deprecated Lighting
-    /*
-    //Add a filllight
-    var filllight;
-    filllight = new THREE.DirectionalLight(filllightcolor, 0.4);
-    filllight.position.set(-450, -450, 0);
-
-    
-    filllight.castShadow=true;
-    filllight.position.set(-200, 400, 0);
-    filllight.castShadow=true;
-    filllight.shadow.camera.left = -d;
-    filllight.shadow.camera.right = d;
-    filllight.shadow.camera.top = d;
-    filllight.shadow.camera.bottom = -d;
-    filllight.shadow.camera.far = 1000;
-    filllight.shadowDarkness = 1;
-       camera.add(filllight);
-    */
-    //#endregion  
 
     //#region Object Loading
 
