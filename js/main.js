@@ -45,6 +45,7 @@ controls.autoRotate = true;
 */
 //#endregion
 
+
 //Trackballcontrols
 var tcontrols = new THREE.TrackballControls(camera, container);
 tcontrols.noPan = true;
@@ -84,62 +85,16 @@ function init() {
     light = new THREE.DirectionalLight(directionalLightColor, 0.5);
     light.position.set(300, -200, 0);
     light.position.multiplyScalar(1.3);
-
-    //Set up Directional Light Shadow Properties
-    
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
-
-    var d = 10;
-
-    light.shadow.camera.left = -d;
-    light.shadow.camera.right = d;
-    light.shadow.camera.top = d;
-    light.shadow.camera.bottom = -d;
-    light.shadow.camera.far = 1000;
-
+    light.shadow.enabled = false;
     //Add Directional light to scene
     camera.add(light);
 
-    /*
-    //Add a backlight
-    var backlight;
-    backlight = new THREE.DirectionalLight(directionalLightColor, 0.1);
-    backlight.position.set(-200, 400, 0);
-    
-    backlight.shadow.camera.left = -d;
-    backlight.shadow.camera.right = d;
-    backlight.shadow.camera.top = d;
-    backlight.shadow.camera.bottom = -d;
-    backlight.shadow.camera.far = 1000;
-    backlight.shadowDarkness = 10;
-   // camera.add(backlight);
-   */
-
-
     var backlight2;
-    backlight2 = new THREE.PointLight(ambientLightColor, 0.3);
+    backlight2 = new THREE.PointLight(ambientLightColor, 0.2);
     backlight2.position.set(0, -60, 30);
-    
-    backlight2.shadow.camera.left = -d;
-    backlight2.shadow.camera.right = d;
-    backlight2.shadow.camera.top = d;
-    backlight2.shadow.camera.bottom = -d;
-    backlight2.shadow.camera.far = 1000;
-    backlight2.shadowDarkness = 10;
-    
-   // camera.add(backlight2);
+    backlight2.shadow.enabled = false;
 
-
-
-    //Because iOS sucks we need to disable shadows for now
-    if(iOS){
-        light.castShadow = false; 
-       // backlight2.castShadow = false;
-    } else {
-        light.castShadow = false; 
-       // backlight2.castShadow = true;
-    }
+    camera.add(backlight2);
 
     //#region Object Loading
 
@@ -171,19 +126,10 @@ function init() {
                 if (child instanceof THREE.Mesh) {
 
                     //Cast & receive for selfshadowing
-                    child.castShadow = true;
-                    child.receiveShadow = true;
+                    child.castShadow = false;
+                    child.receiveShadow = false;
                 }
-            });
-
-            if(iOS){
-                object.castShadow = false;
-                object.receiveShadow = false;
-            } else {
-                object.castShadow = true;
-            object.receiveShadow = true;
-            }
-            
+            });            
             scene.add(object);
         });
         //#endregion
@@ -194,18 +140,11 @@ function init() {
     renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector("canvas"),
         alpha: true,
-        antialias: true
+        antialias: false
     });
 
     renderer.setPixelRatio(3);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    //Resizer Tool only kinda works, does not limit to the div
-    //var winResize = new THREEx.WindowResize(renderer,camera);
-    //winResize.trigger();
-
-
+    renderer.shadowMap.enabled = false;    
 
     //Not the optimal solution but eh
     resizeCanvasToDisplaySize(true);
@@ -229,9 +168,6 @@ function resizeCanvasToDisplaySize(force) {
 
 function animate() {
     requestAnimationFrame(animate);
-    //Deprecated
-    //controls.update();
-  
     tcontrols.update();
     resizeCanvasToDisplaySize();
 
