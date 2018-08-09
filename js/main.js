@@ -49,7 +49,7 @@ controls.autoRotate = true;
 var tcontrols = new THREE.TrackballControls(camera, container);
 tcontrols.noPan = true;
 tcontrols.noZoom = true;
-tcontrols.dynamicDampingFactor = 0.05;
+tcontrols.dynamicDampingFactor = 0.06;
 tcontrols.rotateSpeed = 1.2;
 tcontrols.enableKeys = false;
 
@@ -101,7 +101,7 @@ function init() {
     //Add Directional light to scene
     camera.add(light);
 
-
+    /*
     //Add a backlight
     var backlight;
     backlight = new THREE.DirectionalLight(directionalLightColor, 0.1);
@@ -113,7 +113,8 @@ function init() {
     backlight.shadow.camera.bottom = -d;
     backlight.shadow.camera.far = 1000;
     backlight.shadowDarkness = 10;
-    camera.add(backlight);
+   // camera.add(backlight);
+   */
 
 
     var backlight2;
@@ -127,17 +128,17 @@ function init() {
     backlight2.shadow.camera.far = 1000;
     backlight2.shadowDarkness = 10;
     
-    camera.add(backlight2);
+   // camera.add(backlight2);
 
 
 
     //Because iOS sucks we need to disable shadows for now
     if(iOS){
         light.castShadow = false; 
-        backlight.castShadow = false;
+       // backlight2.castShadow = false;
     } else {
-        light.castShadow = true; 
-        backlight.castShadow = true;
+        light.castShadow = false; 
+       // backlight2.castShadow = true;
     }
 
     //#region Object Loading
