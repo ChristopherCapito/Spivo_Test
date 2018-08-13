@@ -1,12 +1,26 @@
 var camera, scene;
 var renderer;
 var container;
+var spivo_model;
+var camDistance;
+
+var points = ["p1", "p2", "p3", "p4", "p5", "p6"];
+
+var sprite_textures = 
+[    
+    "assets/sprite_1.png",
+    "assets/sprite_2.png",
+    "assets/sprite_3.png",
+    "assets/sprite_4.png",
+    "assets/sprite_5.png",
+    "assets/sprite_6.png",
+]
 
 var fixed = document.getElementById('webGL_canvas');
 
-fixed.addEventListener('touchmove', function(e) {
-
-        e.preventDefault();
+fixed.addEventListener('touchmove', function (e) {
+    'use strict';
+    e.preventDefault();
 
 }, false);
 
@@ -129,11 +143,54 @@ function init() {
                     child.castShadow = false;
                     child.receiveShadow = false;
                 }
-            });            
+            });
+            spivo_model = object;
             scene.add(object);
         });
         //#endregion
     });
+
+    //Annotation Stuff I guess
+    /* BOXES
+    for (i = 0; i < points.length; i++) {
+        points[i] = new THREE.Mesh(
+            new THREE.BoxGeometry(2, 2, 2),
+            new THREE.MeshPhongMaterial({
+                color: 0x156289,
+                emissive: 0x072534,
+                side: THREE.DoubleSide,
+                flatShading: true
+            })
+        );
+        scene.add(points[i]);
+    }
+    */
+
+
+ 
+
+   for (i = 0; i < points.length; i++)  {
+    
+    var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
+    var material = new THREE.SpriteMaterial( { map: spriteMap, } );
+    
+    points[i] = new THREE.Sprite( material );    
+    points[i].scale.set( 2, 2, 1 );
+    scene.add( points[i] );
+}
+    points[0].position.set(5, 6, 4);
+    points[1].position.set(-5, -2, 4);
+    points[2].position.set(2, -9, 5);
+    points[3].position.set(-4, -8, -5);
+    points[4].position.set(3, 1, -4);
+    points[5].position.set(-4, 8, -4);
+
+    camDistance = camera.position.length();
+
+    //Sprite
+    
+// SPRITES
+
 
 
     // RENDERER
@@ -144,7 +201,7 @@ function init() {
     });
 
     renderer.setPixelRatio(3);
-    renderer.shadowMap.enabled = false;    
+    renderer.shadowMap.enabled = false;
 
     //Not the optimal solution but eh
     resizeCanvasToDisplaySize(true);
@@ -172,6 +229,34 @@ function animate() {
     resizeCanvasToDisplaySize();
 
     tcontrols.handleResize();
+    TWEEN.update();
     camera.lookAt(scene.position);
     renderer.render(scene, camera);
+}
+
+
+
+function moveToPoint(i) {
+
+    var tween = new TWEEN.Tween(camera.position);
+
+    var point = new THREE.Vector3();
+    point.x = points[i].position.x;
+    point.y = points[i].position.y;
+    point.z = points[i].position.z;
+    console.log(point);
+    
+
+    point.normalize().multiplyScalar(camDistance);
+    console.log(point);
+
+
+    //pos.normalize().multiplyScalar(camDistance);
+
+
+    tween.to(point);
+    tween.start();
+
+    //camera.position.copy(point).normalize().multiplyScalar(camDistance);
+    tcontrols.update();
 }
