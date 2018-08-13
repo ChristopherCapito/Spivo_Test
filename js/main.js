@@ -227,6 +227,8 @@ function resizeCanvasToDisplaySize(force) {
     }
 }
 
+
+
 function animate() {
     requestAnimationFrame(animate);
     tcontrols.update();
@@ -234,11 +236,31 @@ function animate() {
 
     tcontrols.handleResize();
     TWEEN.update();
+    initialRotation();
     camera.lookAt(scene.position);
+
+    
     renderer.render(scene, camera);
+    
 }
 
+var angle = 0;
+var radius = 50; 
+var pressed = false;
 
+
+
+document.addEventListener('mousedown', () => pressed = true);
+document.addEventListener('touchstart', () => pressed = true);
+
+function initialRotation(){
+ 
+    if(!pressed){
+    camera.position.x = radius * Math.cos( angle );  
+    camera.position.z = radius * Math.sin( angle );
+    angle += 0.01;
+    }
+}
 
 function moveToPoint(i) {
 
