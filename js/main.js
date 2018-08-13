@@ -6,11 +6,15 @@ var camDistance;
 
 var points = ["p1", "p2", "p3", "p4", "p5", "p6"];
 
-
-
-
-
-
+var sprite_textures = 
+[    
+    "assets/sprite_1.png",
+    "assets/sprite_2.png",
+    "assets/sprite_3.png",
+    "assets/sprite_4.png",
+    "assets/sprite_5.png",
+    "assets/sprite_6.png",
+]
 
 var fixed = document.getElementById('webGL_canvas');
 
@@ -147,6 +151,7 @@ function init() {
     });
 
     //Annotation Stuff I guess
+    /* BOXES
     for (i = 0; i < points.length; i++) {
         points[i] = new THREE.Mesh(
             new THREE.BoxGeometry(2, 2, 2),
@@ -159,7 +164,20 @@ function init() {
         );
         scene.add(points[i]);
     }
+    */
 
+
+ 
+
+   for (i = 0; i < points.length; i++)  {
+    
+    var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
+    var material = new THREE.SpriteMaterial( { map: spriteMap, } );
+    
+    points[i] = new THREE.Sprite( material );    
+    points[i].scale.set( 2, 2, 1 );
+    scene.add( points[i] );
+}
     points[0].position.set(5, 6, 4);
     points[1].position.set(-5, -2, 4);
     points[2].position.set(2, -9, 5);
@@ -168,6 +186,12 @@ function init() {
     points[5].position.set(-4, 8, -4);
 
     camDistance = camera.position.length();
+
+    //Sprite
+    
+// SPRITES
+
+
 
     // RENDERER
     renderer = new THREE.WebGLRenderer({
