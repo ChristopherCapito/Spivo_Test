@@ -8,31 +8,34 @@
 html, body {
   height: 100%; 
 }
-
-.wrapper {
-  width: 80%;
-  height: 80%;
-  margin: auto;
-}
-
-.frame {
-
-  display: block;
-
-  height: 100%;
-  width: 100%;
-  max-width: 100vh;
-  max-height: 100vh;  
-  box-shadow: 1px 1px 10px 1px lightgray;
-  margin: auto;
-}
-
-
-canvas {
-
-  display: block;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  background-color: whitesmoke;
-}
+ 
+.wrapper { 
+  width: 80%; 
+  height: 80%; 
+  margin: auto; 
+} 
+ 
+.frame { 
+ 
+  display: block; 
+ 
+  height: 100%; 
+  width: 100%; 
+  max-width: 100vh; 
+  max-height: 100vh;   
+  box-shadow: 1px 1px 10px 1px lightgray; 
+  margin: auto; 
+} 
+ 
+ 
+canvas { 
+ 
+  display: block; 
+  width: 100%; 
+  height: 100%; 
+  touch-action: none; 
+  background-color: whitesmoke; 
+  height: 100%; 
+  display: block; 
+} 
+ 
