@@ -16,6 +16,16 @@ var sprite_textures =
     "assets/sprite_6.png",
 ]
 
+var point_pos = 
+[
+    [5,6,4],
+    [-5,-2,4],
+    [2,-9,5],
+    [-4,-8,-5],
+    [3,1,-4],
+    [-4,8,-4],
+];
+
 var fixed = document.getElementById('webGL_canvas');
 
 fixed.addEventListener('touchmove', function (e) {
@@ -166,9 +176,6 @@ function init() {
     }
     */
 
-
- 
-
    for (i = 0; i < points.length; i++)  {
     
     var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
@@ -176,14 +183,11 @@ function init() {
     
     points[i] = new THREE.Sprite( material );    
     points[i].scale.set( 2, 2, 1 );
+    points[i].position.set(point_pos[i][0], point_pos[i][1], point_pos[i][2]);
+    console.log(points[i].position);
     scene.add( points[i] );
 }
-    points[0].position.set(5, 6, 4);
-    points[1].position.set(-5, -2, 4);
-    points[2].position.set(2, -9, 5);
-    points[3].position.set(-4, -8, -5);
-    points[4].position.set(3, 1, -4);
-    points[5].position.set(-4, 8, -4);
+
 
     camDistance = camera.position.length();
 
