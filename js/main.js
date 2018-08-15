@@ -6,24 +6,29 @@ var camDistance;
 
 var points = ["p1", "p2", "p3", "p4", "p5", "p6"];
 
-var sprite_textures = 
-[    
+var sprite_textures = [
     "assets/sprite_1.png",
     "assets/sprite_2.png",
     "assets/sprite_3.png",
     "assets/sprite_4.png",
     "assets/sprite_5.png",
     "assets/sprite_6.png",
-]
+];
 
-var point_pos = 
-[
-    [5,6,4],
-    [-5,-2,4],
-    [2,-9,5],
-    [-4,-8,-5],
-    [4,1,-4],
-    [-4,8,-4],
+var point_pos = [
+    //[X, Y, Z]
+    //1
+    [5, 6, 4],
+    //2
+    [-5, -2, 4],
+    //3
+    [2, -10, 5],
+    //4
+    [-4, -8, -4],
+    //5
+    [5, 2, -4],
+    //6
+    [-5, 8, -4],
 ];
 
 var fixed = document.getElementById('webGL_canvas');
@@ -176,24 +181,29 @@ function init() {
     }
     */
 
-   for (i = 0; i < points.length; i++)  {
-    
-    var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
-    var material = new THREE.SpriteMaterial( { map: spriteMap, } );
-    
-    points[i] = new THREE.Sprite( material );    
-    points[i].scale.set( 2, 2, 1 );
-    points[i].position.set(point_pos[i][0], point_pos[i][1], point_pos[i][2]);
-    console.log(points[i].position);
-    scene.add( points[i] );
-}
+    for (i = 0; i < points.length; i++) {
+
+        var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
+        var material = new THREE.SpriteMaterial({
+            map: spriteMap,
+            //Uncomment to have sprites always on top
+            //depthWrite : false,
+            //depthTest : false
+        });
+
+        points[i] = new THREE.Sprite(material);
+        points[i].scale.set(2, 2, 1);
+        points[i].position.set(point_pos[i][0], point_pos[i][1], point_pos[i][2]);
+        console.log(points[i].position);
+        scene.add(points[i]);
+    }
 
 
     camDistance = camera.position.length();
 
     //Sprite
-    
-// SPRITES
+
+    // SPRITES
 
 
 
@@ -236,16 +246,16 @@ function animate() {
 
     tcontrols.handleResize();
     TWEEN.update();
-    initialRotation();
+    //initialRotation();
     camera.lookAt(scene.position);
 
-    
+
     renderer.render(scene, camera);
-    
+
 }
 
 var angle = 0;
-var radius = 50; 
+var radius = 50;
 var pressed = false;
 
 
@@ -253,12 +263,12 @@ var pressed = false;
 document.addEventListener('mousedown', () => pressed = true);
 document.addEventListener('touchstart', () => pressed = true);
 
-function initialRotation(){
- 
-    if(!pressed){
-    camera.position.x = radius * Math.cos( angle );  
-    camera.position.z = radius * Math.sin( angle );
-    angle += 0.01;
+function initialRotation() {
+
+    if (!pressed) {
+        camera.position.x = radius * Math.cos(angle);
+        camera.position.z = radius * Math.sin(angle);
+        angle += 0.01;
     }
 }
 
@@ -271,7 +281,7 @@ function moveToPoint(i) {
     point.y = points[i].position.y;
     point.z = points[i].position.z;
     console.log(point);
-    
+
 
     point.normalize().multiplyScalar(camDistance);
     console.log(point);
