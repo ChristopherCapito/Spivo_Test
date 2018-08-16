@@ -3,8 +3,28 @@ var renderer;
 var container;
 var spivo_model;
 var camDistance;
-
+var _camPos = new THREE.Vector3(0, 0, 0);
+var group;
 var points = ["p1", "p2", "p3", "p4", "p5", "p6"];
+
+var intersects;
+
+//Raycasting for sprite is currently not viable
+//so we'll use planes as helpers
+var spriteHelpers = [];
+
+
+//Array for computing the icon's distance from the camera
+var distances = [];
+
+//Hold the n closest icons (splice)
+var closestIcons = [
+    [],
+    []
+];
+
+//The icon closest to the camera
+var highlightedIcon;
 
 var sprite_textures = [
     "assets/sprite_1.png",
@@ -165,22 +185,12 @@ function init() {
         //#endregion
     });
 
-    //Annotation Stuff I guess
-    /* BOXES
-    for (i = 0; i < points.length; i++) {
-        points[i] = new THREE.Mesh(
-            new THREE.BoxGeometry(2, 2, 2),
-            new THREE.MeshPhongMaterial({
-                color: 0x156289,
-                emissive: 0x072534,
-                side: THREE.DoubleSide,
-                flatShading: true
-            })
-        );
-        scene.add(points[i]);
-    }
-    */
+    group = new THREE.Group();
+    scene.add(group);
 
+
+
+    //Sprites
     for (i = 0; i < points.length; i++) {
 
         var spriteMap = new THREE.TextureLoader().load(sprite_textures[i]);
@@ -192,20 +202,34 @@ function init() {
         });
 
         points[i] = new THREE.Sprite(material);
+        points[i].name = i + 1;
         points[i].scale.set(2, 2, 1);
         points[i].position.set(point_pos[i][0], point_pos[i][1], point_pos[i][2]);
         console.log(points[i].position);
         scene.add(points[i]);
+
+        //scene.add(points[i]);  
+
+        /*
+        //Create a plane a long the line
+        var geometry = new THREE.PlaneGeometry(2, 2, 1);
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+            side: THREE.DoubleSide,
+            
+        });
+        var helperPlane = new THREE.Mesh(geometry, material);
+        helperPlane.name = 'Plane ' + i;
+        helperPlane.position.copy(points[i].position);
+        group.add(helperPlane);
+        spriteHelpers.push(helperPlane);
+        */
+
     }
+    console.log(group);
 
-
+    //Initialize the camDistance
     camDistance = camera.position.length();
-
-    //Sprite
-
-    // SPRITES
-
-
 
     // RENDERER
     renderer = new THREE.WebGLRenderer({
@@ -215,11 +239,44 @@ function init() {
     });
 
     renderer.setPixelRatio(3);
-    renderer.shadowMap.enabled = false;
+
 
     //Not the optimal solution but eh
     resizeCanvasToDisplaySize(true);
     window.addEventListener('resize', resizeCanvasToDisplaySize, false);
+    document.addEventListener('touchstart', onDocumentTouchStart, false);
+
+    // mouse listener
+    document.addEventListener('mousedown', onDocumentMouseDown,false);
+}
+
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+function onDocumentTouchStart(event) {
+    console.log('called 1');
+    event.clientX = event.touches[0].clientX;
+    event.clientY = event.touches[0].clientY;
+    onDocumentMouseDown(event);
+}
+
+function onDocumentMouseDown(event){
+    
+        // For the following method to work correctly, set the canvas position *static*; margin > 0 and padding > 0 are OK
+        mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+        mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
+        
+        // For this alternate method, set the canvas position *fixed*; set top > 0, set left > 0; padding must be 0; margin > 0 is OK
+        //mouse.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
+        //mouse.y = - ( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        
+        intersects = raycaster.intersectObjects(points,false);     
+                 
+        //For the love of god I can't get rid of that TypeError when you hit empty space
+        moveToPoint(intersects[0].object.name-1);  
+
 }
 
 function resizeCanvasToDisplaySize(force) {
@@ -237,28 +294,22 @@ function resizeCanvasToDisplaySize(force) {
     }
 }
 
-
-
 function animate() {
     requestAnimationFrame(animate);
     tcontrols.update();
     resizeCanvasToDisplaySize();
-
     tcontrols.handleResize();
     TWEEN.update();
+    alignHelperPlanes();
     //initialRotation();
     camera.lookAt(scene.position);
-
-
+    hidebyDistance();
     renderer.render(scene, camera);
-
 }
 
 var angle = 0;
 var radius = 50;
 var pressed = false;
-
-
 
 document.addEventListener('mousedown', () => pressed = true);
 document.addEventListener('touchstart', () => pressed = true);
@@ -286,13 +337,58 @@ function moveToPoint(i) {
     point.normalize().multiplyScalar(camDistance);
     console.log(point);
 
-
-    //pos.normalize().multiplyScalar(camDistance);
-
-
     tween.to(point);
     tween.start();
 
     //camera.position.copy(point).normalize().multiplyScalar(camDistance);
     tcontrols.update();
+}
+
+//Hiding Icons by Distance
+function hidebyDistance() {
+
+    //Clear the distances array
+    distances.length = 0;
+    //let distances = new Array();
+
+    //Cache the Vector3 position of the camera transform
+    _camPos.copy(camera.position);
+
+    //Loop through the icons
+    for (let i = 0; i < points.length; i++) {
+
+        //Hide all points (later the three closest are made visible)
+        points[i].visible = false;
+        //Calculate the distance from the camera
+        var _dist = _camPos.distanceTo(points[i].position);
+
+        //Add the distance with its corresponding icon to the array
+        distances.push([_dist, points[i]]);
+    }
+
+    //Two-Dimensional sort by distance (first column)
+    distances.sort(function (a, b) {
+        return a[0] - b[0];
+    });
+
+    //Get farthest three icons by slicing the array
+    closestIcons = distances.slice(0, 3);
+
+    //Loop through the resulting array
+    for (i = 0; i < closestIcons.length; i++) {
+
+        //Now you got the closest icon
+        highlightedIcon = closestIcons[0][1];
+
+        //Turn on the visibility for the closest three icons
+        closestIcons[i][1].visible = true;
+    }
+
+    //console.log(closestIcons);
+}
+
+function alignHelperPlanes() {
+    for (i = 0; i < spriteHelpers.length; i++) {
+        spriteHelpers[i].quaternion.copy(camera.quaternion);
+    }
 }
