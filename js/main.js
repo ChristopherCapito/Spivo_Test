@@ -307,8 +307,7 @@ function animate() {
     resizeCanvasToDisplaySize();
     tcontrols.handleResize();
     TWEEN.update();
-    alignHelperPlanes();
-    //initialRotation();
+    initialRotation();
     camera.lookAt(scene.position);
     hidebyDistance();
     renderer.render(scene, camera);
@@ -388,11 +387,5 @@ function hidebyDistance() {
 
         //Turn on the visibility for the closest three icons
         closestIcons[i][1].visible = true;
-    }
-}
-
-function alignHelperPlanes() {
-    for (i = 0; i < spriteHelpers.length; i++) {
-        spriteHelpers[i].quaternion.copy(camera.quaternion);
     }
 }
