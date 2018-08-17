@@ -59,6 +59,7 @@ fixed.addEventListener('touchmove', function (e) {
 
 }, false);
 
+
 var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 // Light Color Config
@@ -247,7 +248,7 @@ function init() {
     document.addEventListener('touchstart', onDocumentTouchStart, false);
 
     // mouse listener
-    document.addEventListener('mousedown', onDocumentMouseDown,false);
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
 }
 
 var raycaster = new THREE.Raycaster();
@@ -255,27 +256,33 @@ var mouse = new THREE.Vector2();
 
 function onDocumentTouchStart(event) {
     console.log('called 1');
+    pressed = true;
     event.clientX = event.touches[0].clientX;
     event.clientY = event.touches[0].clientY;
+
     onDocumentMouseDown(event);
 }
 
-function onDocumentMouseDown(event){
-    
-        // For the following method to work correctly, set the canvas position *static*; margin > 0 and padding > 0 are OK
-        mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
-        mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
-        
-        // For this alternate method, set the canvas position *fixed*; set top > 0, set left > 0; padding must be 0; margin > 0 is OK
-        //mouse.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
-        //mouse.y = - ( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
+function onDocumentMouseDown(event) {
 
-        raycaster.setFromCamera(mouse, camera);
-        
-        intersects = raycaster.intersectObjects(points,false);     
-                 
-        //For the love of god I can't get rid of that TypeError when you hit empty space
-        moveToPoint(intersects[0].object.name-1);  
+    // For the following method to work correctly, set the canvas position *static*; margin > 0 and padding > 0 are OK
+    //mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
+    //mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
+
+    var rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
+
+    // For this alternate method, set the canvas position *fixed*; set top > 0, set left > 0; padding must be 0; margin > 0 is OK
+    //mouse.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
+    //mouse.y = - ( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    intersects = raycaster.intersectObjects(points, false);
+
+    //For the love of god I can't get rid of that TypeError when you hit empty space
+    moveToPoint(intersects[0].object.name - 1);
 
 }
 
@@ -312,7 +319,6 @@ var radius = 50;
 var pressed = false;
 
 document.addEventListener('mousedown', () => pressed = true);
-document.addEventListener('touchstart', () => pressed = true);
 
 function initialRotation() {
 
@@ -383,8 +389,6 @@ function hidebyDistance() {
         //Turn on the visibility for the closest three icons
         closestIcons[i][1].visible = true;
     }
-
-    //console.log(closestIcons);
 }
 
 function alignHelperPlanes() {
