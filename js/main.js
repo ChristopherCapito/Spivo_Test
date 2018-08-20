@@ -6,7 +6,6 @@ var camDistance;
 var _camPos = new THREE.Vector3(0, 0, 0);
 var group;
 var points = ["p1", "p2", "p3", "p4", "p5", "p6"];
-
 var intersects;
 
 //Raycasting for sprite is currently not viable
@@ -35,6 +34,7 @@ var sprite_textures = [
     "assets/sprite_6.png",
 ];
 
+//Use this to manipulate the icon positions
 var point_pos = [
     //[X, Y, Z]
     //1
@@ -78,28 +78,12 @@ camera.lookAt({
     z: 0
 });
 
-
-//#region Deprecated Controls
-/*
-//Camera Controls
-var controls = new THREE.OrbitControls(camera, container);
-controls.enableZoom = false;
-controls.enableKeys = false;
-controls.enablePan = false;
-controls.enableRotate = false;
-controls.enableDamping = true;
-controls.dampingFactor = 0.1;
-controls.rotateSpeed = 0.05;
-controls.autoRotateSpeed = 0.5;
-controls.autoRotate = true;
-*/
-//#endregion
-
-
 //Trackballcontrols
 var tcontrols = new THREE.TrackballControls(camera, container);
 tcontrols.noPan = true;
 tcontrols.noZoom = true;
+
+//Changes camera deceleration
 tcontrols.dynamicDampingFactor = 0.06;
 tcontrols.rotateSpeed = 1.2;
 tcontrols.enableKeys = false;
@@ -139,14 +123,16 @@ function init() {
     //Add Directional light to scene
     camera.add(light);
 
+    //Set up backlight for two point lighting
     var backlight2;
     backlight2 = new THREE.PointLight(ambientLightColor, 0.2);
     backlight2.position.set(0, -60, 30);
     backlight2.shadow.enabled = false;
 
+    //Add backlight to scene
     camera.add(backlight2);
 
-    //#region Object Loading
+    //#region ObjectLoading
 
     //Initialize MTLLoader
     var mtlLoader = new THREE.MTLLoader();
@@ -180,16 +166,12 @@ function init() {
                     child.receiveShadow = false;
                 }
             });
+            //So we can access it outside
             spivo_model = object;
             scene.add(object);
         });
         //#endregion
     });
-
-    group = new THREE.Group();
-    scene.add(group);
-
-
 
     //Sprites
     for (i = 0; i < points.length; i++) {
@@ -208,24 +190,6 @@ function init() {
         points[i].position.set(point_pos[i][0], point_pos[i][1], point_pos[i][2]);
         console.log(points[i].position);
         scene.add(points[i]);
-
-        //scene.add(points[i]);  
-
-        /*
-        //Create a plane a long the line
-        var geometry = new THREE.PlaneGeometry(2, 2, 1);
-        var material = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
-            side: THREE.DoubleSide,
-            
-        });
-        var helperPlane = new THREE.Mesh(geometry, material);
-        helperPlane.name = 'Plane ' + i;
-        helperPlane.position.copy(points[i].position);
-        group.add(helperPlane);
-        spriteHelpers.push(helperPlane);
-        */
-
     }
     console.log(group);
 
@@ -236,9 +200,11 @@ function init() {
     renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector("canvas"),
         alpha: true,
-        antialias: false
+        //Turn on to increase quality, has a hit on performance
+        antialias:false
     });
 
+    //Could be dynamically set. Currently set
     renderer.setPixelRatio(3);
 
 
@@ -265,20 +231,15 @@ function onDocumentTouchStart(event) {
 
 function onDocumentMouseDown(event) {
 
-    // For the following method to work correctly, set the canvas position *static*; margin > 0 and padding > 0 are OK
-    //mouse.x = ((event.clientX - renderer.domElement.offsetLeft) / renderer.domElement.clientWidth) * 2 - 1;
-    //mouse.y = -((event.clientY - renderer.domElement.offsetTop) / renderer.domElement.clientHeight) * 2 + 1;
-
+    //Use the rect to keep up with scrolling offset
     var rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
 
-    // For this alternate method, set the canvas position *fixed*; set top > 0, set left > 0; padding must be 0; margin > 0 is OK
-    //mouse.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
-    //mouse.y = - ( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
-
+    //Shoot
     raycaster.setFromCamera(mouse, camera);
 
+    //Hit
     intersects = raycaster.intersectObjects(points, false);
 
     //For the love of god I can't get rid of that TypeError when you hit empty space
@@ -304,21 +265,28 @@ function resizeCanvasToDisplaySize(force) {
 function animate() {
     requestAnimationFrame(animate);
     tcontrols.update();
+
     resizeCanvasToDisplaySize();
     tcontrols.handleResize();
+
     TWEEN.update();
     initialRotation();
+    
     camera.lookAt(scene.position);
     hidebyDistance();
+
     renderer.render(scene, camera);
 }
 
-var angle = 0;
-var radius = 50;
-var pressed = false;
 
+var pressed = false;
 document.addEventListener('mousedown', () => pressed = true);
 
+
+var angle = 0;
+var radius = 50;
+
+//Would be boring to have it stand still wouldn't it
 function initialRotation() {
 
     if (!pressed) {
@@ -328,16 +296,19 @@ function initialRotation() {
     }
 }
 
+/*  In order to have true spherical movement this would neeed to
+    be utilizing polar coordinates. Moving along latitude and
+    longitude. Will be implemented at a later point in time
+    because it involves some math to get right.
+   */
 function moveToPoint(i) {
 
     var tween = new TWEEN.Tween(camera.position);
-
     var point = new THREE.Vector3();
     point.x = points[i].position.x;
     point.y = points[i].position.y;
     point.z = points[i].position.z;
     console.log(point);
-
 
     point.normalize().multiplyScalar(camDistance);
     console.log(point);
